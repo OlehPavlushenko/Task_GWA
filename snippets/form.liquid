@@ -1,0 +1,40 @@
+{% form 'product', product, class: 'card-product__form' %}
+    <select
+        name='id'
+        id='ProductSelect-{{ product.id }}'
+        class='card-product__variants{% unless product.available and product.variants.size > 1 %} hidden{% endunless%}'
+    >
+        {% for variant in product.variants %}
+            {% if variant.available %}
+                <option
+                    {% if variant == product.selected_or_first_available_variant %}
+                        selected='selected'
+                    {% endif %}
+                    value='{{ variant.id }}'
+                >
+                    {{ variant.title }} - {{ variant.price | money_with_currency }}
+                </option>
+
+            {% else %}
+                <option disabled='disabled'>{{ variant.title }} - Sold out</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <input
+        type='number'
+        id='Quantity'
+        name='quantity'
+        value='1'
+        min='1'
+        class='quantity-selector hidden'
+    >
+
+    <button
+        type='submit'
+        name='add'
+        id='AddToCart-{{ product.id }}'
+        class='btn card-product__btn js-btn'
+    >
+        <span id='AddToCartText'>Add to cart</span>
+    </button>
+{% endform %}

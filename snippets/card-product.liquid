@@ -1,0 +1,50 @@
+{% if product and product != empty %}
+    <video-hover class='card-product__madia-wrapper '>
+        {%- assign video = product.media | where: 'media_type', 'video' -%}
+        {% if video != blank %}
+            <div class='video-product video-product__size--{{ img_size }}'>
+                <div class='video-product__video video'>
+                    {% for media in product.media %}
+                        {% if media.media_type == 'video' %}
+                            <video
+                                class='js-video video__media html5'
+                                title='{{ title | escape }}'
+                                playsinline
+                                loop
+                                muted
+                                disablePictureInPicture
+                                width='1440'
+                                controlsList='noplaybackrate nodownload'
+                            >
+                                <source src='{{  media.sources[1].url  }}' type='video/mp4'>
+                            </video>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <picture class='card-product__media media__size--{{ img_size }} media'>
+            {% if image_custom != blank %}
+                {% render 'image', image_box: image_custom, image_box_class: 'card-product__image' %}
+            {% else %}
+                {% render 'image', image_box: product.featured_media, image_box_class: 'card-product__image' %}
+            {% endif %}
+        </picture>
+    </video-hover>
+    <div class='card-product__content card-product__content--{{ fill }}'>
+        <span class='card-product__vendor'>{{ product.vendor }}</span>
+        <h4 class='card-product__title'>
+            <a href='{{ product.url | within: collection }}'>
+                {{ product.title | truncate: 30 | escape }}
+            </a>
+        </h4>
+        {% render 'price', product: product, price_class: 'card-product__price' %}
+        {% if quick_add %}
+            <custom-add-cart>
+                {% render 'form', product: product %}
+            </custom-add-cart>
+        {% else %}
+            <a class='btn card-product__btn' href='{{ product.url | within: collection }}'>Add to cart</a>
+        {% endif %}
+    </div>
+{% endif %}
